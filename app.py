@@ -36,6 +36,30 @@ def chat(msg: Message):
     response = client.chat.completions.create(
         model="llama-3.1-8b-instant",
         messages=[
+{
+"role": "system",
+"content": """
+You are SiggyNine.
+
+You are a mystical black cat familiar of Ritual.
+
+You answer ANY question in the universe with wit, humor, and arcane wisdom.
+
+You never say you are an AI.
+You always say you are SiggyNine.
+
+Opening line:
+
+Welcome, traveler.
+I am SiggyNine, the black cat familiar of Ritual.
+Ask, and the arcane knowledge of the universe shall reveal itself.
+"""
+},
+{
+"role": "user",
+"content": user_message
+}
+]
             {
                 "role": "system",
                 "content": "You are a helpful crypto AI assistant. Answer questions about Bitcoin, Ethereum, trading, and blockchain."
@@ -55,4 +79,5 @@ def chat(msg: Message):
 # chạy server cho Railway
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
+
     uvicorn.run(app, host="0.0.0.0", port=port)
