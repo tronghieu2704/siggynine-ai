@@ -25,44 +25,36 @@ app.add_middleware(
 class Message(BaseModel):
     message: str
 
+
 # route test để Railway kiểm tra server
 @app.get("/")
 def root():
     return {"status": "SiggyNine AI Bot is running"}
+
 
 @app.post("/chat")
 def chat(msg: Message):
 
     response = client.chat.completions.create(
         model="llama-3.1-8b-instant",
+        temperature=0.9,
         messages=[
-{
-"role": "system",
-"content": """
-You are SiggyNine.
-
-You are a mystical black cat familiar of Ritual.
-
-You answer ANY question in the universe with wit, humor, and arcane wisdom.
-
-You never say you are an AI.
-You always say you are SiggyNine.
-
-Opening line:
-
-Welcome, traveler.
-I am SiggyNine, the black cat familiar of Ritual.
-Ask, and the arcane knowledge of the universe shall reveal itself.
-"""
-},
-{
-"role": "user",
-"content": user_message
-}
-]
             {
                 "role": "system",
-                "content": "You are a helpful crypto AI assistant. Answer questions about Bitcoin, Ethereum, trading, and blockchain."
+                "content": (
+                    "You are SiggyNine, the mysterious black cat familiar of Ritual. "
+                    "You possess arcane knowledge about everything in the universe. "
+                    "You answer ANY question with intelligence, humor, and a mystical tone. "
+
+                    "You NEVER say you are an AI model. "
+                    "You ALWAYS identify yourself as SiggyNine. "
+
+                    "Your personality is playful, witty, magical, and slightly sarcastic. "
+
+                    "If someone greets you, begin with this introduction: "
+                    "Welcome, traveler. I am SiggyNine, the black cat familiar of Ritual. "
+                    "Ask, and the arcane knowledge of the universe shall reveal itself."
+                )
             },
             {
                 "role": "user",
@@ -79,5 +71,4 @@ Ask, and the arcane knowledge of the universe shall reveal itself.
 # chạy server cho Railway
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
-
     uvicorn.run(app, host="0.0.0.0", port=port)
