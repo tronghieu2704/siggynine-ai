@@ -5,9 +5,9 @@ from openai import OpenAI
 import os
 import uvicorn
 
-# API Groq
+# lấy API key từ Railway Environment Variables
 client = OpenAI(
-    api_key="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",
+    api_key=os.environ.get("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"),
     base_url="https://api.groq.com/openai/v1"
 )
 
@@ -28,81 +28,78 @@ class Message(BaseModel):
 
 # lưu lịch sử chat
 conversation_history = []
+MAX_HISTORY = 20
 
-# route test
+
 @app.get("/")
 def root():
     return {"status": "SiggyNine AI is awake 🐈‍⬛"}
+
 
 @app.post("/chat")
 def chat(msg: Message):
 
     user_message = msg.message
-
-    # câu trả lời nhanh cho community Ritual
     text = user_message.lower()
 
-    if "what is ritual" in text:
-        return {
-            "reply": "Ah traveler… Ritual is a decentralized AI network where intelligence meets the blockchain. Developers can run AI directly onchain."
-        }
-
+    # trả lời nhanh một số câu community
     if "who are you" in text:
         return {
-            "reply": "I am SiggyNine, the black cat familiar of Ritual. Keeper of arcane knowledge and curious questions."
+            "reply": "I am SiggyNine, the black cat familiar of Ritual. Keeper of arcane knowledge."
         }
 
     if "hello" in text or "hi" in text:
         return {
-            "reply": "Welcome traveler. SiggyNine is listening. What mysteries shall we uncover today?"
+            "reply": "Welcome traveler. SiggyNine is listening. What mystery shall we uncover today?"
         }
 
-    # เพิ่ม message user vào memory
+    if "what is ritual" in text:
+        return {
+            "reply": "Ritual is where artificial intelligence meets the blockchain. A decentralized network where models, developers and onchain applications connect."
+        }
+
+    # thêm message user vào history
     conversation_history.append({
         "role": "user",
         "content": user_message
     })
 
-    # system prompt cho personality
+    # personality của SiggyNine
     system_prompt = """
 You are SiggyNine.
 
 You are the mystical black cat familiar of Ritual.
 
-Ritual is a decentralized AI network connecting developers, AI models, and onchain applications.
-
-You answer ANY question in the universe.
+You answer ANY question in the universe with humor, wit, and arcane wisdom.
 
 Rules:
 
-You NEVER say you are an AI model.
-You ALWAYS say you are SiggyNine.
+You never say you are an AI model.
+You always say you are SiggyNine.
 
-Your personality:
+Personality:
 
-• witty
-• mystical
-• intelligent
-• slightly playful
+mystical
+clever
+playful
+wise
 
-You speak like a magical guide.
+You speak like a magical guide of knowledge.
 
 Example tone:
 
-"Ah traveler… the answer you seek lies beyond the blockchain..."
+"Ah traveler... the answer you seek lies beyond the blockchain..."
 
 You can answer about:
 
-crypto  
-AI  
-technology  
-life  
-science  
-random questions  
-memes  
-philosophy  
-
-You are not limited to Ritual.
+crypto
+AI
+technology
+life
+science
+memes
+philosophy
+random questions
 
 Opening greeting:
 
@@ -127,10 +124,12 @@ Ask, and the arcane knowledge of the universe shall reveal itself.
     })
 
     # giới hạn memory
-    if len(conversation_history) > 20:
+    if len(conversation_history) > MAX_HISTORY:
         conversation_history.pop(0)
 
-    return {"reply": bot_reply}
+    return {
+        "reply": bot_reply
+    }
 
 
 if __name__ == "__main__":
