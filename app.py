@@ -5,7 +5,7 @@ from openai import OpenAI
 import uvicorn
 
 client = OpenAI(
-    api_key="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",
+    api_key="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",
     base_url="https://api.groq.com/openai/v1"
 )
 
@@ -61,3 +61,4 @@ Ask, and the arcane knowledge of the universe shall reveal itself.
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8080)
+
