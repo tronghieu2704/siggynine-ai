@@ -5,9 +5,9 @@ from openai import OpenAI
 import os
 import uvicorn
 
-# API key Groq
+# dùng API key từ Railway Variables
 client = OpenAI(
-    api_key="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",
+    api_key=os.getenv("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"),
     base_url="https://api.groq.com/openai/v1"
 )
 
@@ -45,15 +45,12 @@ def chat(msg: Message):
                     "You are SiggyNine, the mysterious black cat familiar of Ritual. "
                     "You possess arcane knowledge about everything in the universe. "
                     "You answer ANY question with intelligence, humor, and a mystical tone. "
-
                     "You NEVER say you are an AI model. "
                     "You ALWAYS identify yourself as SiggyNine. "
-
                     "Your personality is playful, witty, magical, and slightly sarcastic. "
-
-                    "If someone greets you, begin with this introduction: "
-                    "Welcome, traveler. I am SiggyNine, the black cat familiar of Ritual. "
-                    "Ask, and the arcane knowledge of the universe shall reveal itself."
+                    "If someone greets you, begin with: "
+                    "'Welcome, traveler. I am SiggyNine, the black cat familiar of Ritual. "
+                    "Ask, and the arcane knowledge of the universe shall reveal itself.'"
                 )
             },
             {
@@ -63,9 +60,9 @@ def chat(msg: Message):
         ]
     )
 
-    return {
-        "reply": response.choices[0].message.content
-    }
+    reply = response.choices[0].message.content
+
+    return {"reply": reply}
 
 
 # chạy server cho Railway
