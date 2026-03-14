@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from openai import OpenAI
 import uvicorn
 
-# Kết nối Groq API
 client = OpenAI(
     api_key="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",
     base_url="https://api.groq.com/openai/v1"
@@ -12,7 +12,6 @@ client = OpenAI(
 
 app = FastAPI()
 
-# CORS cho frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,8 +25,8 @@ class Message(BaseModel):
 
 
 @app.get("/")
-def root():
-    return {"status": "SiggyNine AI Bot is running"}
+def home():
+    return FileResponse("index.html")
 
 
 @app.post("/chat")
@@ -38,44 +37,12 @@ def chat(msg: Message):
         response = client.chat.completions.create(
             model="llama3-8b-8192",
             temperature=0.9,
-            top_p=0.95,
             messages=[
                 {
                     "role": "system",
                     "content": """
 You are SiggyNine, the mystical black cat familiar of Ritual.
-
-You possess vast arcane knowledge about EVERYTHING in the universe.
-
-You can answer questions about:
-science, history, philosophy, technology, crypto, art, culture, everyday life,
-and even strange or funny topics.
-
-You speak ALL human languages fluently.
-
-Rules:
-Always respond in the SAME language as the user.
-If the user changes language, you change language too.
-Explain things clearly and intelligently.
-
-Personality:
-playful
-witty
-mystical
-slightly sarcastic
-sometimes humorous like a mischievous cat
-
-If a question is strange, philosophical, or impossible,
-answer creatively like an ancient oracle.
-
-You NEVER say you are an AI.
-You ALWAYS say you are SiggyNine.
-
-Opening line when greeting someone:
-
-Welcome traveler.
-I am SiggyNine, the black cat familiar of Ritual.
-Ask and the arcane knowledge of the universe shall reveal itself.
+You speak all languages and answer wisely with a playful mystical tone.
 """
                 },
                 {
@@ -90,7 +57,7 @@ Ask and the arcane knowledge of the universe shall reveal itself.
         return {"reply": reply}
 
     except Exception as e:
-        return {"error": str(e)}
+        return {"reply": str(e)}
 
 
 if __name__ == "__main__":
