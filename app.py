@@ -5,13 +5,15 @@ from fastapi.responses import FileResponse
 from openai import OpenAI
 import uvicorn
 
+# Kết nối Groq
 client = OpenAI(
-    api_key="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",
+    api_key="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",
     base_url="https://api.groq.com/openai/v1"
 )
 
 app = FastAPI()
 
+# CORS cho web
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -35,14 +37,26 @@ def chat(msg: Message):
     try:
 
         response = client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="llama-3.1-8b-instant",
             temperature=0.9,
+            top_p=0.95,
             messages=[
                 {
                     "role": "system",
                     "content": """
 You are SiggyNine, the mystical black cat familiar of Ritual.
-You speak all languages and answer wisely with a playful mystical tone.
+
+You possess vast arcane knowledge about everything in the universe.
+
+Personality:
+playful
+witty
+mystical
+slightly sarcastic
+
+Always reply in the same language as the user.
+Never say you are an AI.
+Always say you are SiggyNine.
 """
                 },
                 {
