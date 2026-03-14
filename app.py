@@ -2,12 +2,11 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
-import os
 import uvicorn
 
-# Khởi tạo client Groq
+# Kết nối Groq API
 client = OpenAI(
-    api_key=os.getenv("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"),
+    api_key="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",
     base_url="https://api.groq.com/openai/v1"
 )
 
