@@ -7,7 +7,7 @@ import uvicorn
 
 # Kết nối Groq
 client = OpenAI(
-    api_key="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",
+    api_key="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",
     base_url="https://api.groq.com/openai/v1"
 )
 
